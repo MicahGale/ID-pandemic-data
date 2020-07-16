@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
 
+matplotlib.rc('text', usetex=True)
+matplotlib.rc('font', size=18)
 cases = pd.read_csv("Trendlinear_Full_Data_data.csv", encoding="UTF-8")
 
 cases = cases.replace(np.NaN, 0)
@@ -83,8 +85,9 @@ def fitCasesDecay(splices):
     plt.plot(
         xdata,
         expFunc(xdata, *popt),
-        label="{:.2f}*exp(-{:.2f}*x)+{:.2f} R^2={:.2f}".format(*popt,r_squared),
+        label="${:.2f}e^{{-{:.2f}x}}+{:.2f}$ \n $R^2={:.2f}$".format(*popt,r_squared),
     )
+    print("function: {}*exp(-{}*x)+{} \n  R^2={} \n half-life: {}".format(*popt,r_squared, np.log(2)/popt[1]))
     plt.legend()
     plt.ylabel("Number of cases contracted")
     plt.xlabel("Days since start of State-wide stay home order")
@@ -95,6 +98,6 @@ def expFunc(x, a, b, c):
     return a * np.exp(-b * x) + c
 
 
-graphByOnset(cases, phases)
+#graphByOnset(cases, phases)
 splices = spliceCasesByPhases(cases, phases)
-#fitCasesDecay(splices)
+fitCasesDecay(splices)
